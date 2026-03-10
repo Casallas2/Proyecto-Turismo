@@ -1,0 +1,88 @@
+<div class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+  <div class="bg-white max-w-lg w-full rounded-lg shadow-lg p-6 space-y-4">
+    <h1 class="text-xl font-semibold text-slate-800">
+      Confirmar estado de la reserva externa
+    </h1>
+
+    <p class="text-sm text-slate-600">
+      Indica si lograste completar la reserva en la plataforma oficial del establecimiento. Este
+      paso es obligatorio para continuar.
+    </p>
+
+    <div class="space-y-3">
+      <label class="flex items-center gap-3 cursor-pointer">
+        <input
+          type="radio"
+          name="success"
+          [ngModel]="success === true"
+          (ngModelChange)="success = true"
+        />
+        <span class="text-sm text-slate-800">Sí, logré reservar correctamente</span>
+      </label>
+
+      <div class="ml-6" *ngIf="success === true">
+        <label class="block text-xs font-medium text-slate-600 mb-1">
+          Sube el comprobante (PDF o imagen)
+        </label>
+        <input type="file" (change)="onFileSelected($event)" class="text-sm" />
+      </div>
+
+      <label class="flex items-center gap-3 mt-3 cursor-pointer">
+        <input
+          type="radio"
+          name="success"
+          [ngModel]="success === false"
+          (ngModelChange)="success = false"
+        />
+        <span class="text-sm text-slate-800">No pude completar la reserva</span>
+      </label>
+
+      <div class="ml-6 space-y-2" *ngIf="success === false">
+        <label class="block text-xs font-medium text-slate-600 mb-1">Motivo</label>
+        <select
+          [(ngModel)]="failureReasonType"
+          class="w-full border rounded px-2 py-1 text-sm"
+        >
+          <option value="PAGINA_CAIDA">Página caída</option>
+          <option value="SIN_DISPONIBILIDAD">Sin disponibilidad</option>
+          <option value="ERROR_DATOS">Error en datos</option>
+          <option value="OTRO">Otro motivo</option>
+        </select>
+
+        <div *ngIf="failureReasonType === 'OTRO'">
+          <label class="block text-xs font-medium text-slate-600 mb-1">Describe el motivo</label>
+          <textarea
+            class="w-full border rounded px-2 py-1 text-sm"
+            rows="3"
+            [(ngModel)]="failureReasonText"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="error()" class="text-sm text-red-600">
+      {{ error() }}
+    </div>
+
+    <div *ngIf="done()" class="text-sm text-green-600">
+      Tu confirmación se ha registrado correctamente.
+    </div>
+
+    <div class="flex justify-end gap-2 pt-2">
+      <a
+        routerLink="/reservations"
+        class="text-sm text-blue-600 hover:underline"
+      >
+        Ir a mis reservas
+      </a>
+      <button
+        type="button"
+        class="px-3 py-1.5 rounded bg-blue-600 text-white text-sm hover:bg-blue-700"
+        (click)="submit()"
+      >
+        Confirmar
+      </button>
+    </div>
+  </div>
+</div>
+

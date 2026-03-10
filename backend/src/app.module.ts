@@ -1,8 +1,11 @@
-// src/app.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { User } from './users/entities/user.entity';
+import { UsersModule } from './users/users.module';
+import { SitesModule } from './sites/sites.module';
+import { ReservationsModule } from './reservations/reservations.module';
+import { ReportsModule } from './reports/reports.module';
+import { AuditModule } from './audit/audit.module';
 
 @Module({
   imports: [
@@ -12,13 +15,17 @@ import { User } from './users/entities/user.entity';
       port: 5432,
       username: 'postgres',
       password: '123456',
-      database: 'turismo_db',
-      entities: [User],
+      database: 'proyecto_turismo',
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
       logging: true,
     }),
+    AuditModule,
     AuthModule,
+    UsersModule,
+    SitesModule,
+    ReservationsModule,
+    ReportsModule,
   ],
 })
 export class AppModule {}

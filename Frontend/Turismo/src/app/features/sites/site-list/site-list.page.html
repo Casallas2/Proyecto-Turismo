@@ -1,0 +1,115 @@
+<div class="min-h-screen bg-slate-50">
+  <div class="max-w-6xl mx-auto px-4 py-6 space-y-6">
+    <div class="flex justify-between items-center">
+      <h1 class="text-2xl font-semibold text-slate-800">Sitios turísticos</h1>
+      <a
+        routerLink="/"
+        class="text-sm text-blue-600 hover:underline"
+      >
+        Volver al inicio
+      </a>
+    </div>
+
+    <div class="bg-white p-4 rounded-lg shadow flex flex-wrap gap-4 items-end">
+      <div class="flex-1 min-w-[200px]">
+        <label class="block text-xs font-medium text-slate-600 mb-1">Buscar por nombre</label>
+        <input
+          type="text"
+          [(ngModel)]="nameFilter"
+          placeholder="Nombre del sitio"
+          class="w-full border rounded px-2 py-1 text-sm"
+        />
+      </div>
+
+      <div class="w-48">
+        <label class="block text-xs font-medium text-slate-600 mb-1">Tipo de turismo</label>
+        <select
+          [(ngModel)]="typeFilter"
+          class="w-full border rounded px-2 py-1 text-sm"
+        >
+          <option [ngValue]="null">Todos los tipos</option>
+          <option value="ECOTURISMO">Ecoturismo</option>
+          <option value="PLAYA">Playa</option>
+          <option value="CULTURAL">Cultural</option>
+          <option value="AVENTURA">Aventura</option>
+        </select>
+      </div>
+
+      <div class="flex gap-2">
+        <button
+          type="button"
+          class="px-3 py-1.5 rounded bg-blue-600 text-white text-sm hover:bg-blue-700"
+          (click)="onSearch()"
+        >
+          Aplicar filtros
+        </button>
+        <button
+          type="button"
+          class="px-3 py-1.5 rounded border border-slate-300 text-sm text-slate-700 hover:bg-slate-100"
+          (click)="clearFilters()"
+        >
+          Limpiar
+        </button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      @for (site of sites(); track site.id) {
+        <article
+          class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col hover:shadow-lg transition-shadow"
+        >
+          <a [routerLink]="['/sites', site.id]" class="block flex-1 flex flex-col">
+            <div class="aspect-[4/3] bg-slate-200 overflow-hidden">
+              @if (site.images?.[0]; as firstImage) {
+                <img
+                  [src]="getImageUrl(firstImage.id)"
+                  alt=""
+                  class="w-full h-full object-cover"
+                />
+              }
+            </div>
+            <div class="p-5 flex-1 flex flex-col">
+              <span class="text-xs uppercase tracking-wide text-blue-600 font-semibold">
+                {{ site.type }}
+              </span>
+              <h2 class="mt-1 text-xl font-semibold text-slate-900 line-clamp-2">
+                {{ site.name }}
+              </h2>
+              <p class="mt-2 text-sm text-slate-600 line-clamp-3">
+                {{ site.description }}
+              </p>
+              <p class="mt-2 text-xs text-slate-500">
+                {{ site.location }}
+              </p>
+              <p class="mt-3 text-base font-semibold text-blue-700">
+                Desde {{ site.pricePerPerson }} por persona
+              </p>
+            </div>
+          </a>
+          <div class="px-5 pb-5 pt-0 flex gap-2">
+            <a
+              [routerLink]="['/sites', site.id]"
+              class="inline-block px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700"
+            >
+              Ver detalle
+            </a>
+            @if (auth.isAdmin()) {
+              <a
+                [routerLink]="['/admin/sites', site.id, 'edit']"
+                class="inline-block px-4 py-2 rounded-lg border border-slate-300 text-slate-700 text-sm hover:bg-slate-50"
+              >
+                Editar
+              </a>
+            }
+          </div>
+        </article>
+      }
+      @if (sites().length === 0) {
+        <p class="col-span-full text-center text-slate-500 py-12">
+          No se encontraron sitios con los filtros actuales.
+        </p>
+      }
+    </div>
+  </div>
+</div>
+
