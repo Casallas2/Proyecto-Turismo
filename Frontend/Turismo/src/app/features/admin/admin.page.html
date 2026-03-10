@@ -1,0 +1,39 @@
+<div class="min-h-screen bg-slate-50">
+  <div class="max-w-4xl mx-auto px-4 py-8 space-y-8">
+    <div class="flex justify-between items-center">
+      <h1 class="text-2xl font-semibold text-slate-800">Administración</h1>
+      <a
+        routerLink="/"
+        class="text-sm text-slate-600 hover:text-slate-900"
+      >
+        Volver al inicio
+      </a>
+    </div>
+
+    <section class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-medium text-slate-800 mb-4">Sitios turísticos</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <a
+          routerLink="/admin/sites/new"
+          class="flex items-center gap-3 p-4 rounded-lg border-2 border-dashed border-blue-200 bg-blue-50/50 hover:border-blue-400 hover:bg-blue-50 transition"
+        >
+          <span class="text-2xl">➕</span>
+          <div>
+            <span class="font-medium text-slate-800">Crear sitio</span>
+            <p class="text-sm text-slate-600">Añadir un nuevo sitio turístico</p>
+          </div>
+        </a>
+        <a
+          routerLink="/sites"
+          class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition"
+        >
+          <span class="text-2xl">📋</span>
+          <div>
+            <span class="font-medium text-slate-800">Ver sitios</span>
+            <p class="text-sm text-slate-600">Explorar y gestionar sitios</p>
+          </div>
+        </a>
+      </div>
+    </section>
+  </div>
+</div>

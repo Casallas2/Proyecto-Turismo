@@ -1,0 +1,118 @@
+<div class="flex min-h-screen bg-slate-50">
+  <!-- Overlay en móvil cuando el sidebar está abierto -->
+  <div
+    class="fixed inset-0 bg-black/50 z-20 md:hidden"
+    [class.hidden]="!sidebarOpen()"
+    (click)="sidebarOpen.set(false)"
+    aria-hidden="true"
+  ></div>
+  <aside
+    class="w-56 bg-slate-800 text-slate-200 flex flex-col flex-shrink-0 fixed inset-y-0 left-0 z-30 transition-transform duration-200 ease-out md:translate-x-0 -translate-x-full"
+    [class.translate-x-0]="sidebarOpen()"
+  >
+    <div class="p-4 border-b border-slate-700 flex items-center justify-between">
+      <a routerLink="/" routerLinkActive="text-amber-400" [routerLinkActiveOptions]="{ exact: true }" class="text-lg font-semibold hover:text-white">
+        Turismo
+      </a>
+      <button
+        type="button"
+        class="md:hidden p-2 -mr-2 rounded-lg hover:bg-slate-700/50"
+        (click)="sidebarOpen.set(false)"
+        aria-label="Cerrar menú"
+      >
+        ✕
+      </button>
+    </div>
+    <nav class="flex-1 p-3 space-y-0.5">
+      <a
+        routerLink="/"
+        routerLinkActive="bg-slate-700 text-white"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm hover:bg-slate-700/50"
+      >
+        <span aria-hidden="true">🏠</span>
+        Inicio
+      </a>
+      <a
+        routerLink="/sites"
+        routerLinkActive="bg-slate-700 text-white"
+        class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm hover:bg-slate-700/50"
+      >
+        <span aria-hidden="true">📍</span>
+        Explorar sitios
+      </a>
+      @if (auth.isAdmin()) {
+        <a
+          routerLink="/admin"
+          routerLinkActive="bg-slate-700 text-white"
+          class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm hover:bg-slate-700/50 text-amber-300 hover:text-amber-200"
+        >
+          <span aria-hidden="true">⚙️</span>
+          Administración
+        </a>
+      }
+      @if (auth.isAuthenticated()) {
+        <a
+          routerLink="/profile"
+          routerLinkActive="bg-slate-700 text-white"
+          class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm hover:bg-slate-700/50"
+        >
+          <span aria-hidden="true">👤</span>
+          Mi perfil
+        </a>
+        <a
+          routerLink="/reservations"
+          routerLinkActive="bg-slate-700 text-white"
+          class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm hover:bg-slate-700/50"
+        >
+          <span aria-hidden="true">📋</span>
+          Mis reservas
+        </a>
+      }
+    </nav>
+    <div class="p-3 border-t border-slate-700 space-y-0.5">
+      @if (auth.isAuthenticated()) {
+        <button
+          type="button"
+          (click)="auth.logout()"
+          class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm hover:bg-slate-700/50 text-slate-300"
+        >
+          <span aria-hidden="true">🚪</span>
+          Cerrar sesión
+        </button>
+      } @else {
+        <a
+          routerLink="/login"
+          routerLinkActive="bg-slate-700 text-white"
+          class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm hover:bg-slate-700/50"
+        >
+          <span aria-hidden="true">🔑</span>
+          Iniciar sesión
+        </a>
+        <a
+          routerLink="/register"
+          class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm hover:bg-slate-700/50 bg-blue-600/20 text-blue-300 hover:bg-blue-600/30"
+        >
+          <span aria-hidden="true">✨</span>
+          Registrarse
+        </a>
+      }
+    </div>
+  </aside>
+  <main class="flex-1 min-w-0 md:pl-56">
+    <header class="sticky top-0 z-10 bg-white/95 backdrop-blur border-b border-slate-200 md:hidden">
+      <div class="flex items-center gap-2 px-4 py-3">
+        <button
+          type="button"
+          class="p-2 -ml-2 rounded-lg hover:bg-slate-100"
+          (click)="sidebarOpen.set(true)"
+          aria-label="Abrir menú"
+        >
+          ☰
+        </button>
+        <a routerLink="/" class="text-lg font-semibold text-slate-800">Turismo</a>
+      </div>
+    </header>
+    <router-outlet />
+  </main>
+</div>

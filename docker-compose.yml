@@ -1,0 +1,28 @@
+# PostgreSQL para el backend del Proyecto Turismo.
+# Uso: desde la raíz del proyecto ejecutar:
+#   docker compose up -d
+# La primera vez se crea la BD proyecto_turismo y se aplica db/schema.sql.
+# Conexión: host=localhost, port=5432, user=postgres, password=123456, database=proyecto_turismo
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: proyecto-turismo-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "123456"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/01-create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
+      - ./db/02-run-schema.sh:/docker-entrypoint-initdb.d/02-run-schema.sh
+      - ./db/schema.sql:/schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

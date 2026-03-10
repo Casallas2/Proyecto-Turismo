@@ -1,0 +1,131 @@
+<div class="min-h-screen bg-slate-50">
+  <div class="max-w-3xl mx-auto px-4 py-6 space-y-6" *ngIf="user() as u">
+    <div class="flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-semibold text-slate-800">Mi perfil</h1>
+        <p class="text-sm text-slate-500">{{ u.email }}</p>
+      </div>
+      <button
+        type="button"
+        class="px-3 py-1.5 rounded bg-red-600 text-white text-sm hover:bg-red-700"
+        (click)="logout()"
+      >
+        Cerrar sesión
+      </button>
+    </div>
+
+    <div *ngIf="error()" class="text-sm text-red-600">
+      {{ error() }}
+    </div>
+    <div *ngIf="success()" class="text-sm text-green-600">
+      {{ success() }}
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-4 space-y-4">
+      <h2 class="text-sm font-semibold text-slate-700">Datos personales</h2>
+
+      <div class="grid md:grid-cols-2 gap-4 text-sm">
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Nombre completo</label>
+          <input
+            type="text"
+            class="w-full border rounded px-2 py-1"
+            [(ngModel)]="u.fullName"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Teléfono</label>
+          <input
+            type="text"
+            class="w-full border rounded px-2 py-1"
+            [(ngModel)]="u.phone"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Documento</label>
+          <input
+            type="text"
+            class="w-full border rounded px-2 py-1"
+            [(ngModel)]="u.documentId"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">País</label>
+          <input
+            type="text"
+            class="w-full border rounded px-2 py-1"
+            [(ngModel)]="u.country"
+          />
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-xs font-medium text-slate-600 mb-1">Dirección</label>
+          <input
+            type="text"
+            class="w-full border rounded px-2 py-1"
+            [(ngModel)]="u.address"
+          />
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <button
+          type="button"
+          class="px-3 py-1.5 rounded bg-blue-600 text-white text-sm hover:bg-blue-700"
+          (click)="saveProfile()"
+        >
+          Guardar cambios
+        </button>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-4 space-y-4">
+      <h2 class="text-sm font-semibold text-slate-700">Cambiar contraseña</h2>
+
+      <div class="grid md:grid-cols-2 gap-4 text-sm">
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Contraseña actual</label>
+          <input
+            type="password"
+            class="w-full border rounded px-2 py-1"
+            [(ngModel)]="currentPassword"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Nueva contraseña</label>
+          <input
+            type="password"
+            class="w-full border rounded px-2 py-1"
+            [(ngModel)]="newPassword"
+          />
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <button
+          type="button"
+          class="px-3 py-1.5 rounded border border-slate-300 text-sm text-slate-700 hover:bg-slate-100"
+          (click)="changePassword()"
+        >
+          Actualizar contraseña
+        </button>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-4">
+      <a
+        routerLink="/reservations"
+        class="text-sm text-blue-600 hover:underline"
+      >
+        Ver mis reservas
+      </a>
+      <a
+        *ngIf="isAdmin()"
+        routerLink="/admin"
+        class="text-sm text-amber-700 hover:text-amber-800 font-medium"
+      >
+        Administración
+      </a>
+    </div>
+  </div>
+</div>
+

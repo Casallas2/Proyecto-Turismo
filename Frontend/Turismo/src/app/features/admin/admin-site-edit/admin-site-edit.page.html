@@ -1,0 +1,213 @@
+<div class="min-h-screen bg-slate-50" *ngIf="site() as site">
+  <div class="max-w-2xl mx-auto px-4 py-8 space-y-6">
+    <div class="flex justify-between items-center">
+      <h1 class="text-2xl font-semibold text-slate-800">Editar sitio turístico</h1>
+      <a
+        routerLink="/admin"
+        class="text-sm text-slate-600 hover:text-slate-900"
+      >
+        Volver a administración
+      </a>
+    </div>
+
+    <div *ngIf="error()" class="p-3 rounded bg-red-50 text-red-700 text-sm">
+      {{ error() }}
+    </div>
+
+    <form
+      (ngSubmit)="submit()"
+      class="bg-white rounded-lg shadow p-6 space-y-4"
+    >
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Nombre *</label>
+        <input
+          type="text"
+          [(ngModel)]="name"
+          name="name"
+          class="w-full border border-slate-300 rounded px-3 py-2 text-sm"
+          placeholder="Ej. Parque Nacional"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Descripción *</label>
+        <textarea
+          [(ngModel)]="description"
+          name="description"
+          rows="4"
+          class="w-full border border-slate-300 rounded px-3 py-2 text-sm"
+          placeholder="Descripción del sitio"
+        ></textarea>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Ubicación *</label>
+        <input
+          type="text"
+          [(ngModel)]="location"
+          name="location"
+          class="w-full border border-slate-300 rounded px-3 py-2 text-sm"
+          placeholder="Ciudad, región o dirección"
+        />
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Precio por persona *</label>
+          <input
+            type="number"
+            step="0.01"
+            min="0"
+            [(ngModel)]="pricePerPerson"
+            name="pricePerPerson"
+            class="w-full border border-slate-300 rounded px-3 py-2 text-sm"
+            placeholder="0.00"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Capacidad máxima *</label>
+          <input
+            type="number"
+            min="1"
+            [(ngModel)]="maxCapacity"
+            name="maxCapacity"
+            class="w-full border border-slate-300 rounded px-3 py-2 text-sm"
+            placeholder="1"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Tipo de turismo *</label>
+        <select
+          [(ngModel)]="type"
+          name="type"
+          class="w-full border border-slate-300 rounded px-3 py-2 text-sm"
+        >
+          <option *ngFor="let t of tourismTypes" [value]="t.value">{{ t.label }}</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">URL oficial (opcional)</label>
+        <input
+          type="url"
+          [(ngModel)]="officialUrl"
+          name="officialUrl"
+          class="w-full border border-slate-300 rounded px-3 py-2 text-sm"
+          placeholder="https://..."
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Imágenes actuales</label>
+        <div class="flex flex-wrap gap-2 mt-1" *ngIf="site.images?.length; else noImages">
+          <div
+            *ngFor="let img of site.images"
+            class="relative rounded overflow-hidden border border-slate-200 w-24 h-24"
+          >
+            <img
+              [src]="getImageUrl(img.id)"
+              alt=""
+              class="w-full h-full object-cover"
+            />
+            <button
+              type="button"
+              (click)="removeImage(img.id)"
+              [disabled]="deletingImageId() === img.id"
+              class="absolute top-0 right-0 bg-red-600 text-white text-xs p-1 rounded-bl hover:bg-red-700 disabled:opacity-50"
+            >
+              {{ deletingImageId() === img.id ? '…' : '✕' }}
+            </button>
+          </div>
+        </div>
+        <ng-template #noImages>
+          <p class="text-sm text-slate-500">Sin imágenes.</p>
+        </ng-template>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Añadir más imágenes</label>
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          (change)="onFilesSelected($event)"
+          class="w-full border border-slate-300 rounded px-3 py-2 text-sm file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+        />
+        <p *ngIf="selectedFiles().length" class="mt-1 text-xs text-slate-500">
+          {{ selectedFiles().length }} imagen(es) para subir. Guarda el formulario para subirlas.
+        </p>
+      </div>
+
+      <div class="flex gap-3 pt-2">
+        <button
+          type="submit"
+          [disabled]="loading()"
+          class="px-4 py-2 rounded bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
+        >
+          {{ loading() ? 'Guardando…' : 'Guardar cambios' }}
+        </button>
+        <a
+          [routerLink]="['/sites', site.id]"
+          class="px-4 py-2 rounded border border-slate-300 text-slate-700 text-sm hover:bg-slate-50"
+        >
+          Ver sitio
+        </a>
+        <a
+          routerLink="/admin"
+          class="px-4 py-2 rounded border border-slate-300 text-slate-700 text-sm hover:bg-slate-50"
+        >
+          Cancelar
+        </a>
+      </div>
+    </form>
+
+    <div class="bg-white rounded-lg shadow p-6 border-l-4 border-red-200">
+      <h2 class="text-lg font-medium text-slate-800 mb-2">Zona de peligro</h2>
+      <p class="text-sm text-slate-600 mb-3">
+        Eliminar este sitio es irreversible. Se borrarán también sus imágenes y se pueden afectar reservas.
+      </p>
+      <button
+        type="button"
+        (click)="confirmDelete()"
+        class="px-4 py-2 rounded bg-red-600 text-white text-sm font-medium hover:bg-red-700"
+      >
+        Eliminar sitio
+      </button>
+    </div>
+
+    <div
+      *ngIf="showDeleteConfirm()"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-10"
+      (click)="cancelDelete()"
+    >
+      <div
+        class="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full"
+        (click)="$event.stopPropagation()"
+      >
+        <h3 class="text-lg font-semibold text-slate-800 mb-2">¿Eliminar sitio?</h3>
+        <p class="text-sm text-slate-600 mb-4">
+          Esta acción no se puede deshacer. ¿Seguro que quieres eliminar «{{ name }}»?
+        </p>
+        <div class="flex gap-2 justify-end">
+          <button
+            type="button"
+            (click)="cancelDelete()"
+            class="px-3 py-1.5 rounded border border-slate-300 text-slate-700 text-sm"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            (click)="deleteSite()"
+            [disabled]="loading()"
+            class="px-3 py-1.5 rounded bg-red-600 text-white text-sm hover:bg-red-700 disabled:opacity-50"
+          >
+            Sí, eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
